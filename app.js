@@ -9,7 +9,7 @@ app.use(bodyParser.json())
 
 // simple select all
 app.get('/api/users', (req, res) => {
-    knex('users')
+    knex('users') // SELECT * FROM USERS 
     .then(users => {
         res.json(users)
     })
@@ -53,6 +53,7 @@ app.post('/api/users', validateUser, (req, res) => {
       }
     knex('users')
     .insert(req.body)
+    .returning('*')
     .then(user => { // will come back as an array
         res.json(user)
     })
@@ -78,11 +79,11 @@ app.patch('/api/users/:id', (req, res) => { // should validate this body too/404
     })
 })
 
-app.delete('/api/users/:id', (req, res) => { // should validate this body too/404 if user does not exist
+app.delete('/api/users/:id', (req, res) => { 
     knex('users')
     .where('id', req.params.id)
     .del()
-    .then(() => { // will come back as an array
+    .then(() => {
         res.send('User deleted.')
     })
     .catch(e => {
